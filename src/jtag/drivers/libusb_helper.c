@@ -145,8 +145,8 @@ static bool jtag_libusb_match_serial(struct libusb_device_handle *device,
 	return match;
 }
 
-int jtag_libusb_open(const uint16_t vids[], const uint16_t pids[], const char *product,
-		struct libusb_device_handle **out,
+int jtag_libusb_open(const uint16_t vids[], const uint16_t pids[],
+		const char *product, struct libusb_device_handle **out,
 		adapter_get_alternate_serial_fn adapter_get_alternate_serial)
 {
 	int cnt, idx, err_code;
