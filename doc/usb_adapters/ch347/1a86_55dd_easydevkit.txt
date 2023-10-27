@@ -2,9 +2,12 @@
 
 # Link: https://www.easydevkits.com
 # PCB: ESP32-WROVER-E WCH JTAG DevKit v0.1
-# Chip: CH347T
+# Chip: CH347T in mode 3 (UART+JTAG mode)
+# Product id of 0x55dd is only valid if the chip is started in mode 3
+# These are the other product ids: mode 0 = 0x55da, mode 1 = 0x55db, mode 2 = 0x55dc
+# The similar chip CH347F has no modes and always product id 0x55de
 
-Bus 001 Device 016: ID 1a86:55dd QinHeng Electronics EasyDevKit
+Bus 001 Device 013: ID 1a86:55dd QinHeng Electronics EasyDevKit
 Device Descriptor:
   bLength                18
   bDescriptorType         1
@@ -15,10 +18,10 @@ Device Descriptor:
   bMaxPacketSize0        64
   idVendor           0x1a86 QinHeng Electronics
   idProduct          0x55dd
-  bcdDevice            2.41
+  bcdDevice            4.41
   iManufacturer           1 EasyDevKits
   iProduct                2 EasyDevKit
-  iSerial                 3 ACABBIHAAB
+  iSerial                 3 ACBACJGAAB
   bNumConfigurations      1
   Configuration Descriptor:
     bLength                 9

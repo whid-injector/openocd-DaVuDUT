@@ -626,7 +626,8 @@ This is deprecated from Linux v5.3; prefer using @b{linuxgpiod}.
 @* A JTAG driver to communicate with builtin debug modules of Espressif ESP32-C3 and ESP32-S3 chips using OpenOCD.
 
 @item @b{ch347}
-@* A JTAG driver which uses the WCH CH347 JTAG chip which works in mode 3 as UART + JTAG interface.
+@* A JTAG driver which uses the WCH CH347T JTAG chip which works in mode 3 as UART + JTAG interface.
+The WCH datasheet for CH347 mention also a CH347F version. But this version was not available for testing.
 
 @end itemize
 
@@ -2546,15 +2547,15 @@ and a specific set of GPIOs is used.
 Driver for WCH CH347T chips in mode 3 (UART + JTAG).
 This driver has these driver-specific command:
 
-@deffn {Config Command} {vid_pid}
-The vendor ID and product ID of the CH347 device. If not specified
+@deffn {Config Command} {ch347 vid_pid} vid pid
+The vendor ID and product ID of the CH347T device in mode 3. If not specified
 the driver will use vendor ID 0x1a86 and product ID 0x55dd.
 @example
 ch347 vid_pid 0x1a86 0x55dd
 @end example
 @end deffn
 
-@deffn {Config Command} {device_desc}
+@deffn {Config Command} {ch347 device_desc} description
 If specified connect to a device which exactly has this product description
 string. If not specified the first found device with the correct vendor
 and product ID will be connected.
@@ -2563,9 +2564,9 @@ ch347 device_desc "EasyDevKit"
 @end example
 @end deffn
 
-@deffn {Config Command} {activity_led}
+@deffn {Config Command} {ch347 activity_led} [n]gpio_number
 If specified the drive let an activity LED blink during JTAG operations.
-The number is the GPIO number of the CH347 chip. If prefixed with "n",
+The number is the GPIO number of the CH347T chip. If prefixed with "n",
 then this GPIO should be low active. The example configures GPIO4 as
 low active activity LED. For the CH347T chip only GPIO3 (Pin11 / SCL),
 GPIO4 (Pin15 / ACT), GPIO5 (Pin9 / TRST) and GPIO6 (Pin2 / CTS1) are possible.
@@ -2574,7 +2575,7 @@ ch347 activity_led n4
 @end example
 @end deffn
 
-@deffn {Command} {jtag_ntrst_delay}
+@deffn {Command} {jtag_ntrst_delay} duration
 Triggers a tap reset via trst pin. The value specifies the duration of
 the low pulse in milliseconds.
 @example
