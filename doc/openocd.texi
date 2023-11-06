@@ -2563,25 +2563,6 @@ and product ID will be connected.
 ch347 device_desc "EasyDevKit"
 @end example
 @end deffn
-
-@deffn {Config Command} {ch347 activity_led} [n]gpio_number
-If specified the drive let an activity LED blink during JTAG operations.
-The number is the GPIO number of the CH347T chip. If prefixed with "n",
-then this GPIO should be low active. The example configures GPIO4 as
-low active activity LED. For the CH347T chip only GPIO3 (Pin11 / SCL),
-GPIO4 (Pin15 / ACT), GPIO5 (Pin9 / TRST) and GPIO6 (Pin2 / CTS1) are possible.
-@example
-ch347 activity_led n4
-@end example
-@end deffn
-
-@deffn {Command} {jtag_ntrst_delay} duration
-Triggers a tap reset via trst pin. The value specifies the duration of
-the low pulse in milliseconds.
-@example
-ch347 jtag_ntrst_delay 500
-@end example
-@end deffn
 @end deffn
 
 @deffn {Interface Driver} {cmsis-dap}

@@ -1038,21 +1038,6 @@ static void ch347_activity_led_set(int led_state)
 }
 
 /**
- * @brief Sets the TRST pin
- *
- * @param status Pin status: true = high; false = low
- * @return ERROR_OK at success; ERROR_FAIL otherwise
- */
-static int ch347_trst_set(bool status)
-{
-	ch347_cmd_start_next(CH347_CMD_JTAG_BIT_OP);
-	ch347.trst_pin = status ? TRST_H : TRST_L;
-	ch347_scratchpad_add_pin_byte();
-	ch347_cmd_transmit_queue();
-	return ERROR_OK;
-}
-
-/**
  * @brief Control (assert/deassert) the signals SRST and TRST on the interface.
  *
  * @param trst 1 to assert SRST, 0 to deassert SRST.
@@ -1362,22 +1347,6 @@ COMMAND_HANDLER(ch347_handle_vid_pid_command)
 }
 
 /**
- * @brief The command handler for resetting the target device via trst pin
- *
- * @return Always ERROR_OK
- */
-COMMAND_HANDLER(ch347_trst)
-{
-	if (CMD_ARGC != 1)
-		return ERROR_COMMAND_SYNTAX_ERROR;
-
-	ch347_trst_set(false);
-	jtag_sleep(atoi(CMD_ARGV[0]) * 1000);
-	ch347_trst_set(true);
-	return ERROR_OK;
-}
-
-/**
  * @brief The command handler for setting the device description that should be found
  *
  * @return ERROR_OK at success; ERROR_COMMAND_SYNTAX_ERROR otherwise
@@ -1392,33 +1361,6 @@ COMMAND_HANDLER(ch347_handle_device_desc_command)
 	return ERROR_OK;
 }
 
-/**
- * @brief The command handler for configuring which GPIO pin is used as activity LED
- *
- * @return ERROR_OK at success; ERROR_COMMAND_SYNTAX_ERROR otherwise
- */
-COMMAND_HANDLER(ch347_handle_activity_led_command)
-{
-	if (CMD_ARGC != 1)
-		return ERROR_COMMAND_SYNTAX_ERROR;
-
-	uint8_t gpio;
-	if (CMD_ARGV[0][0] == 'n') {
-		COMMAND_PARSE_NUMBER(u8, &CMD_ARGV[0][1], gpio);
-		ch347_activity_led_active_high = false;
-	} else {
-		COMMAND_PARSE_NUMBER(u8, CMD_ARGV[0], gpio);
-		ch347_activity_led_active_high = true;
-	}
-
-	if (gpio >= GPIO_CNT || (BIT(gpio) & USEABLE_GPIOS) == 0)
-		return ERROR_COMMAND_ARGUMENT_INVALID;
-
-	ch347_activity_led_gpio_pin = gpio;
-
-	return ERROR_OK;
-}
-
 static const struct command_registration ch347_subcommand_handlers[] = {
 	{
 		.name = "vid_pid",
@@ -1428,25 +1370,11 @@ static const struct command_registration ch347_subcommand_handlers[] = {
 		.usage = "vid pid",
 	},
 	{
-		.name = "jtag_ntrst_delay",
-		.handler = &ch347_trst,
-		.mode = COMMAND_ANY,
-		.help = "resets via trst pin, parameter is the delay between low and high edge",
-		.usage = "[milliseconds]",
-	},
-	{
 		.name = "device_desc",
 		.handler = &ch347_handle_device_desc_command,
 		.mode = COMMAND_CONFIG,
 		.help = "set the USB device description of the CH347 device",
 		.usage = "description_string",
-	},
-	{
-		.name = "activity_led",
-		.handler = &ch347_handle_activity_led_command,
-		.mode = COMMAND_CONFIG,
-		.help = "if set this CH347 GPIO pin is the JTAG activity LED; start with n for active low output",
-		.usage = "[n]gpio_number",
 	},
 	COMMAND_REGISTRATION_DONE
 };
