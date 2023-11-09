@@ -1497,7 +1497,7 @@ static void ch347_swd_queue_flush(void)
 	}
 
 	ch347_swd_context.recv_len = 0;
-	length = ch347_swd_context.recv_len;
+	length = ch347_swd_context.need_recv_len;
 	if (ch347_read_data(&ch347_swd_context.recv_buf[ch347_swd_context.recv_len], &length) != ERROR_OK) {
 		ch347_swd_context.queued_retval = ERROR_FAIL;
 		LOG_DEBUG("CH347ReadData error");
