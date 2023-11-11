@@ -153,12 +153,6 @@ struct adapter_driver *adapter_drivers[] = {
 #if BUILD_AM335XGPIO == 1
 		&am335xgpio_adapter_driver,
 #endif
-#if BUILD_ESP_REMOTE
-		&esp_remote_adapter_driver,
-#endif
-#if BUILD_ESP_GPIO
-		&esp_gpio_adapter_driver,
-#endif
 #if BUILD_CH347 == 1
 		&ch347_adapter_driver,
 #endif

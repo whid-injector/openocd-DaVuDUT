@@ -9004,10 +9004,6 @@ Redirect logging to @var{filename} or set it back to default output;
 the default log output channel is stderr.
 @end deffn
 
-@deffn {Command} {log_non_error_levels_to_stdout} [on | off]
-This command can be used when there is a desire to change the default channel for non-error messages.
-@end deffn
-
 @deffn {Command} {add_script_search_dir} [directory]
 Add @var{directory} to the file/script search path.
 @end deffn
@@ -9388,8 +9384,8 @@ for similar mechanisms that do not consume hardware breakpoints.)
 Remove the breakpoint at @var{address} or all breakpoints.
 @end deffn
 
-@deffn {Command} {rwp} address
-Remove data watchpoint on @var{address}
+@deffn {Command} {rwp} @option{all} | address
+Remove data watchpoint on @var{address} or all watchpoints.
 @end deffn
 
 @deffn {Command} {wp} [address len [(@option{r}|@option{w}|@option{a}) [value [mask]]]]
@@ -10968,9 +10964,11 @@ addreg rtest 0x1234 org.gnu.gdb.or1k.group0 system
 @section RISC-V Architecture
 
 @uref{http://riscv.org/, RISC-V} is a free and open ISA. OpenOCD supports JTAG
-debug of RV32 and RV64 cores in heterogeneous multicore systems of up to 2^20
-harts. OpenOCD primarily supports 0.13 of the RISC-V Debug Specification,
-but there is also support for legacy targets that implement version 0.11.
+debug of RV32 and RV64 cores in heterogeneous multicore systems of up to 32
+harts. (It's possible to increase this limit to 1024 by changing
+RISCV_MAX_HARTS in riscv.h.) OpenOCD primarily supports 0.13 of the RISC-V
+Debug Specification, but there is also support for legacy targets that
+implement version 0.11.
 
 @subsection RISC-V Terminology
 
@@ -11066,9 +11064,7 @@ $_TARGETNAME expose_custom 32=myregister
 @end deffn
 
 @deffn {Command} {riscv info}
-Displays some information OpenOCD detected about the target. Output's format
-allows to use it directly with TCL's `array set` function. In case obtaining an
-info point failed, the corresponding value is displayed as "unavailable".
+Displays some information OpenOCD detected about the target.
 @end deffn
 
 @deffn {Command} {riscv reset_delays} [wait]
@@ -11142,13 +11138,6 @@ and DBUS registers, respectively.
 @deffn {Command} {riscv use_bscan_tunnel} value
 Enable or disable use of a BSCAN tunnel to reach DM.  Supply the width of
 the DM transport TAP's instruction register to enable.  Supply a value of 0 to disable.
-@end deffn
-
-@deffn {Command} {riscv set_maskisr} [@option{off}|@option{steponly}]
-Selects whether interrupts will be disabled when single stepping. The default configuration is @option{off}.
-This feature is only useful on hardware that always steps into interrupts and doesn't support dcsr.stepie=0.
-Keep in mind, disabling the option does not guarantee that single stepping will go into interrupt handlers.
-To make that happen, dcsr.stepie would have to be written to 1 as well.
 @end deffn
 
 @deffn {Command} {riscv set_ebreakm} on|off
@@ -11618,31 +11607,6 @@ Stops Espressif multi-core SystremView tracing started with above command.
 
 @deffn {Command} {esp sysview_mcore} (status)
 Requests ongoing Espressif multi-core SystremView tracing status.
-@end deffn
-
-@deffn {Command} {esp gcov} [dump]
-Dumps collected coverage (gcov) data from target.
-@url{https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/app_trace.html#gcov-source-code-coverage}
-@itemize @bullet
-@item @code{dump} - Used for @uref{https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/app_trace.html#hard-coded-dump, hard-coded dump mode}.
-@end itemize
-@end deffn
-
-@deffn {Command} {esp32 flashbootstrap} (none|1.8|3.3|high|low)
-This is ESP32 specific command. It allows to take care on
-@uref{https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/jtag-debugging/tips-and-quirks.html#why-to-set-spi-flash-voltage-in-openocd-configuration, flash bootstrapping configuration}
-which uses TDI pin for selecting SPI flash voltage.
-@itemize @bullet
-@item @code{none} - do not care about TDI.
-@item @code{1.8} - TDI will be setup to indicate 1.8v flash after JTAG transaction.
-@item @code{3.3} - TDI will be setup to indicate 3.3v flash after JTAG transaction.
-@item @code{low} - TDI will be setup to indicate 1.8v flash after JTAG transaction.
-@item @code{high} - TDI will be setup to indicate 3.3v flash after JTAG transaction.
-@end itemize
-@end deffn
-
-@deffn {Command} {esp gdb_detach_handler}
-Handles @code{gdb-detach} event and makes necessary cleanups. Currently, this is required to remove flash breakpoints when gdb disconnects unexpectedly.
 @end deffn
 
 @anchor{softwaredebugmessagesandtracing}
@@ -12537,7 +12501,7 @@ Return information about the flash banks
 @item @b{capture} <@var{command}>
 
 Run <@var{command}> and return full log output that was produced during
-its execution. Example:
+its execution together with the command output. Example:
 
 @example
 > capture "reset init"
