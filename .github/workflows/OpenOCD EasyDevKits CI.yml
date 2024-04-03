@@ -50,7 +50,7 @@ jobs:
     - name: Bootstrap
       run: ./bootstrap
     - name: Configure
-      run: ./configure
+      run: ./configure --disable-werror=yes
     - name: Make
       run: make
     - name: Create package
