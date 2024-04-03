@@ -45,7 +45,7 @@ jobs:
         msystem: MINGW32
         update: true
         #for MINGW64 but not working - install: base-devel mingw-w64-x86_64-toolchain git libtool pkg-config autoconf automake texinfo mingw-w64-x86_64-libusb
-        install: base-devel mingw-w64-i686-gcc mingw-w64-i686-toolchain git libtool pkg-config autoconf automake texinfo mingw-w64-i686-libusb
+        install: base-devel mingw-w64-i686-gcc mingw-w64-i686-toolchain git libtool pkg-config autoconf automake texinfo mingw-w64-libusb
 
     - name: Bootstrap
       run: ./bootstrap
