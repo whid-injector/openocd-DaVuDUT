@@ -1,3 +1,20 @@
+```
+sudo apt-get install libtool pkg-config texinfo libusb-dev libusb-1.0.0-dev libftdi-dev autoconf automake make git libftdi* libhidapi-hidraw0
+cd /home/whid/Desktop
+git clone https://github.com/whid-injector/openocd-DaVuDUT
+cd openocd-DaVuDUT
+mkdir build
+git config --file .gitmodules submodule.tools/git2cl.url https://github.com/zephyrproject-rtos/git2cl.git
+git submodule sync tools/git2cl
+git submodule update --init --recursive
+./bootstrap
+./configure --prefix=/home/whid/Desktop/openocd-DaVuDUT/build
+make
+make install
+```
+
+
+
 [![OpenOCD EasyDevKits CI](https://github.com/EasyDevKits/openocd-easydevkits/actions/workflows/OpenOCD%20EasyDevKits%20CI.yml/badge.svg)](https://github.com/EasyDevKits/openocd-easydevkits/actions/workflows/OpenOCD%20EasyDevKits%20CI.yml)
 
 # Welcome to OpenOCD for EasyDevKits!
