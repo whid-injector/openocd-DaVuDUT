@@ -222,8 +222,9 @@ struct ch347_swd_context {
 
 static struct ch347_swd_context ch347_swd_context;
 static bool swd_mode;
-static uint16_t ch347_vids[] = {DEFAULT_VENDOR_ID, 0};
-static uint16_t ch347_pids[] = {DEFAULT_PRODUCT_ID, 0};
+// porcodio
+static uint16_t ch347_vids[] = {0x1a86, 0x1a86, 0x1a86, 0};
+static uint16_t ch347_pids[] = {0x55dd, 0x55de, 0x55e7, 0};
 static char *ch347_device_desc;
 static uint8_t ch347_activity_led_gpio_pin = 0xFF;
 static bool ch347_activity_led_active_high;
