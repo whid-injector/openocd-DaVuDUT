@@ -1172,12 +1172,17 @@ static int ch347_open_device(void)
 		return retval;
 	}
 
-	retval = libusb_claim_interface(ch347_handle, CH347_MPHSI_INTERFACE);
+	//Doppio Porcodio
+	/*retval = libusb_claim_interface(ch347_handle, CH347_MPHSI_INTERFACE);
 	if (retval != ERROR_OK) {
 		LOG_ERROR("CH347 unable to claim interface: %s", libusb_error_name(retval));
 		jtag_libusb_close(ch347_handle);
 		return retval;
 	}
+	*/
+	/* jtag_libusb_open() already detached any kernel driver and
+  	* claimed the right interface. Claiming it again would return
+  	* LIBUSB_ERROR_BUSY. */
 
 	char firmware_version;
 	retval = jtag_libusb_control_transfer(ch347_handle,
